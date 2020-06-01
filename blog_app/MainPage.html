@@ -140,10 +140,11 @@
 <hr>
 <br><br>
 <div class="text-center bg-light text-dark">
-    <h3>All new Blogs</h3>
+    <h3>All new Question & Answers</h3>
 </div>
 <hr>
 <br>
+
 <div class="row-container-fluid bg-3">
     <div class="col-sm-12 "id="blogs">
 
@@ -245,7 +246,8 @@ $("#main-image").click(function()
                                         "name":fileCompleteName,
                                         "desc":desc,
                                         "uid":user.uid,
-                                        "name":userName,
+                                        "counter":5000 - counter,
+                                        "userName":userName,
                                         "time":time.toLocaleString('en-US',{hour:'numeric',minute:'numeric',hour12:true}),
                                         "date":time.toLocaleDateString('en-US',options),
                                    };
@@ -264,6 +266,7 @@ $("#main-image").click(function()
                                         $("#result").html("Question has been Uploaded Successfully");
                                         window.open("", "_self");
                                        }
+                                       resetForm();
                                    });
                             });
                         
@@ -280,6 +283,76 @@ function resetForm()
     $("#upload-progress").html("Completed");
 
 }
+
+
+
+//*************************************Retrieve and Displayfrom Firebasee************************************
+                                    var firebaseConfig = {
+                                            apiKey: "AIzaSyA3gZkecqHm7viz080FZsUWblnt7CImhGE",
+                                            authDomain: "askandanswer-11c57.firebaseapp.com",
+                                            databaseURL: "https://askandanswer-11c57.firebaseio.com",
+                                            projectId: "askandanswer-11c57",
+                                            storageBucket: "askandanswer-11c57.appspot.com",
+                                            messagingSenderId: "15668163315",
+                                            appId: "1:15668163315:web:c905529df3f2ca99e03d86",
+                                            measurementId: "G-JWPZPBPSJC"
+                                            };
+                                            // Initialize Firebase
+                                            firebase.initializeApp(firebaseConfig);
+                                            firebase.analytics();
+
+
+                                            firebase.auth.Auth.Persistence.LOCAL;
+                                        
+
+
+
+
+
+
+var dbBlogs=firebase.database().ref().child("Blogs").orderByChild("counter");
+
+dbBlogs.on("value",function(blogs){
+
+    if(blogs.exists())
+    {
+        var blogsHtml="";
+        blogs.forEach(function(singleBlog){
+            counter =counter+1;
+            blogsHtml+="<div class='jumbotron bg-light text-dark border border-dark'>";
+                     blogsHtml+="<div><img width='1015px' height='500px' src='";
+                           blogsHtml+=singleBlog.val().image;
+                     blogsHtml+="'/></div><br>";
+
+                     blogsHtml+="<div class='row'>";
+                     blogsHtml  += "<div class='col-sm-5'><p style='color:grey;'>"
+                                +"Published by:"+singleBlog.val().userName 
+                                +"</p></div>"+
+
+                                "<div class='col-sm-3'><p style='color:grey;'>"
+                                +"Time:"+singleBlog.val().time 
+                                +"</p></div>" +
+
+                                "<div class='col-sm-4'><p style='color:grey;'>"
+                                +"Date:"+singleBlog.val().date
+                                +"</p></div>"
+                                
+                                ;
+             blogsHtml+="</div><br>";
+
+             blogsHtml+="<div style='text-align: justify;color:black;'>";
+                           blogsHtml+=singleBlog.val().desc;
+                     blogsHtml+="</div><br>";
+            blogsHtml+="</div>";
+       
+        });
+        $("#blogs").html(blogsHtml);
+
+    }
+});
+
+//************************************* Ends here Retrieve and Displayfrom Firebasee************************************
+
 </script>
 
 
